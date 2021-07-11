@@ -55,17 +55,17 @@ namespace DefaultNamespace
         public static void CalculateAllTilemapUp(Tilemap tilemap, Action<Vector3Int> doSomething)
         {
             var currentTile = new Vector3Int();
-            
+
             for (var x = tilemap.cellBounds.xMin; x < tilemap.cellBounds.xMax; x++)
             {
                 for (var y = tilemap.cellBounds.yMin; y < tilemap.cellBounds.yMax; y++)
                 {
                     currentTile.x = x;
                     currentTile.y = y;
-                    
+
                     if (!tilemap.HasTile(currentTile))
                         continue;
-                    
+
                     doSomething?.Invoke(currentTile);
                 }
             }
@@ -158,54 +158,6 @@ namespace DefaultNamespace
                 }
             }
             
-            return false;
-        }
-        
-        public static void CalculateWaterPressureSimple(Tilemap tilemap, Vector3Int position)
-        {
-            if (tilemap.HasTile(position + Vector3Int.up))
-                return;
-            
-            if (!TryGetWaterAbovePosition(tilemap, position, out var abovePosition))
-                return;
-                
-            tilemap.SetTile(position + Vector3Int.up, tilemap.GetTile(abovePosition));
-            tilemap.SetTile(abovePosition, null);
-        }
-
-        public static bool TryGetWaterAbovePosition(Tilemap tilemap, Vector3Int position, out Vector3Int abovePosition)
-        {
-            var rightOffset = position + Vector3Int.right + Vector3Int.up;
-            var leftOffset = position + Vector3Int.left + Vector3Int.up;
-
-            abovePosition = position;
-
-            var step = 100;
-            
-            for (var y = 0; y < step; y++)
-            {
-                for (var x = 0; x < step; x++)
-                {
-                    if (tilemap.HasTile(rightOffset))
-                    {
-                        abovePosition = rightOffset;
-                        return true;
-                    }
-                    
-                    if (tilemap.HasTile(leftOffset))
-                    {
-                        abovePosition = leftOffset;
-                        return true;
-                    }
-                    
-                    rightOffset += Vector3Int.right;
-                    leftOffset += Vector3Int.left;
-                }
-                
-                rightOffset += Vector3Int.up - Vector3Int.right * step;
-                leftOffset += Vector3Int.up - Vector3Int.left * step;
-            }
-
             return false;
         }
         

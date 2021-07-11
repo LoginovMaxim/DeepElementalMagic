@@ -37,14 +37,6 @@ public class Water : MonoBehaviour
 
             CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
             
-            /*
-            if (_tilemap.HasTile(currentTilePosition + Vector3Int.right) ||
-                _tilemap.HasTile(currentTilePosition + Vector3Int.left) ||
-                _staticTilemap.HasTile(currentTilePosition + Vector3Int.right) ||
-                _staticTilemap.HasTile(currentTilePosition + Vector3Int.left))
-                Utils.CalculateWaterPressureSimple(_tilemap, currentTilePosition);
-            */
-            
             Utils.CalculateWaterPressure(_tilemap, currentTilePosition);
         });
     }
