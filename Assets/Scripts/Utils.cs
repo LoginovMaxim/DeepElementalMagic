@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Cysharp.Threading.Tasks;
 
 namespace DefaultNamespace
 {
@@ -55,7 +56,7 @@ namespace DefaultNamespace
         public static void CalculateAllTilemapUp(Tilemap tilemap, Action<Vector3Int> doSomething)
         {
             var currentTile = new Vector3Int();
-
+            
             for (var x = tilemap.cellBounds.xMin; x < tilemap.cellBounds.xMax; x++)
             {
                 for (var y = tilemap.cellBounds.yMin; y < tilemap.cellBounds.yMax; y++)
@@ -97,9 +98,9 @@ namespace DefaultNamespace
             isRight = true;
         }
 
-        public static void CalculateWaterPressure(Tilemap tilemap, Vector3Int position)
+        public static void CalculateWaterPressure(Tilemap tilemap, Vector3Int position, Vector3Int flowDirection)
         {
-            if (tilemap.HasTile(position + Vector3Int.up))
+            if (tilemap.HasTile(position + flowDirection))
                 return;
             
             var logicPositions = new Dictionary<Vector3Int, bool>();
@@ -121,7 +122,7 @@ namespace DefaultNamespace
                     continue;
                 }
                 
-                tilemap.SetTile(position + Vector3Int.up, tilemap.GetTile(abovePosition));
+                tilemap.SetTile(position + flowDirection, tilemap.GetTile(abovePosition));
                 tilemap.SetTile(abovePosition, null);
                 return;
             }

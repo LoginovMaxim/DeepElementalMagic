@@ -29,15 +29,17 @@ public class Water : MonoBehaviour
         {
             if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
                 return;
-            
+
             if (CheckTile(currentTilePosition, Vector3Int.down))
                 return;
 
             Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
             CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
-            
-            Utils.CalculateWaterPressure(_tilemap, currentTilePosition);
+
+            //Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.right);
+            //Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.left);
+            Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
         });
     }
 
