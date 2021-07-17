@@ -1,16 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 public class Water : MonoBehaviour
 {
+    public bool IsHorizontalCalculate;
     [SerializeField] private Tilemap _staticTilemap;
     [SerializeField] private Tilemap _tilemap;
-    [SerializeField] private Utils.Timer _timer;
+    [SerializeField] private Utils.Utils.Timer _timer;
 
     private void Update()
     {
@@ -25,22 +25,40 @@ public class Water : MonoBehaviour
 
     private void DoSimulate()
     {
-        Utils.CalculateAllTilemapUp(_tilemap, currentTilePosition =>
+        if (IsHorizontalCalculate)
         {
-            if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
-                return;
+            Utils.Utils.HorizontalCalculateAllTilemapUp(_tilemap, currentTilePosition =>
+            {
+                if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
+                    return;
 
-            if (CheckTile(currentTilePosition, Vector3Int.down))
-                return;
+                if (CheckTile(currentTilePosition, Vector3Int.down))
+                    return;
 
-            Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+                Utils.Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
-            CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
+                CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
 
-            //Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.right);
-            //Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.left);
-            Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
-        });
+                Utils.Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
+            });
+        }
+        else
+        {
+            Utils.Utils.CalculateAllTilemapUp(_tilemap, currentTilePosition =>
+            {
+                if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
+                    return;
+
+                if (CheckTile(currentTilePosition, Vector3Int.down))
+                    return;
+
+                Utils.Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+
+                CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
+
+                Utils.Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
+            });
+        }
     }
 
     private bool CheckTile(Vector3Int currentPosition, Vector3Int direction)

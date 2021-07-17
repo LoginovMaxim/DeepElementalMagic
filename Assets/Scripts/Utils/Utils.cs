@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using Cysharp.Threading.Tasks;
 
-namespace DefaultNamespace
+namespace Utils
 {
     public static class Utils
     {
-        public static Vector3Int[] Directions = 
-        {
-            Vector3Int.up, 
-            Vector3Int.left, 
-            Vector3Int.right,
-            Vector3Int.down, 
-            Vector3Int.up + Vector3Int.left,
-            Vector3Int.up + Vector3Int.right,
-            Vector3Int.down + Vector3Int.left,
-            Vector3Int.down + Vector3Int.right,
-        };
+        public const float MapCellSize = 0.16f;
         
         public static Vector3Int[] FourDirections = 
         {
@@ -60,6 +49,25 @@ namespace DefaultNamespace
             for (var x = tilemap.cellBounds.xMin; x < tilemap.cellBounds.xMax; x++)
             {
                 for (var y = tilemap.cellBounds.yMin; y < tilemap.cellBounds.yMax; y++)
+                {
+                    currentTile.x = x;
+                    currentTile.y = y;
+
+                    if (!tilemap.HasTile(currentTile))
+                        continue;
+
+                    doSomething?.Invoke(currentTile);
+                }
+            }
+        }
+        
+        public static void HorizontalCalculateAllTilemapUp(Tilemap tilemap, Action<Vector3Int> doSomething)
+        {
+            var currentTile = new Vector3Int();
+            
+            for (var y = tilemap.cellBounds.yMin; y < tilemap.cellBounds.yMax; y++)
+            {
+                for (var x = tilemap.cellBounds.xMin; x < tilemap.cellBounds.xMax; x++)
                 {
                     currentTile.x = x;
                     currentTile.y = y;
