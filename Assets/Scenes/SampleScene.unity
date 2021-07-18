@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 215340014}
   - component: {fileID: 215340016}
   - component: {fileID: 215340017}
+  - component: {fileID: 215340018}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -184,11 +185,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapUpdater: {fileID: 215340017}
-  ChunkSize: 16
+  _chunkSize: 16
   CountWidthChunks: 16
   CountHeightChunks: 12
-  _sizeCavePath: 0.45
-  _widthCaveHole: 16
+  _sizeCavePath: 0.33
+  _dampingValue: -60
+  _widthCaveHole: 20
   _heightCaveHole: 12
   _maxEarthHeight: 7
   _earth: {fileID: 673184945}
@@ -196,11 +198,13 @@ MonoBehaviour:
   _maxWaterHeight: 3
   _water: {fileID: 292362029}
   _waterTileData: {fileID: 11400000, guid: 27f3aa9563f6f564ba75508e0c812742, type: 2}
+  _waterCoefficient: 0.9
   _minLavaHeight: 2
   _lava: {fileID: 2087240039}
   _lavaTileData: {fileID: 11400000, guid: dbc0fd021f13fa44abbc24564dbfa555, type: 2}
   IsDrawChunkBounds: 1
-  MarkPrefab: {fileID: 7844697847716119318, guid: 499ea29f8fce1af458158c74ca550477, type: 3}
+  ChunkMark: {fileID: 215340018}
+  IsDrawChunkMarks: 0
 --- !u!114 &215340017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -220,6 +224,19 @@ MonoBehaviour:
   _waterGlobalTimer:
     TimeDelay: 1
     ElapsedTime: 0
+--- !u!114 &215340018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215340013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61626ca44b4458f449414bca0b59dc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _markPrefab: {fileID: 7844697847716119318, guid: 499ea29f8fce1af458158c74ca550477, type: 3}
 --- !u!1 &292362024
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +248,6 @@ GameObject:
   - component: {fileID: 292362025}
   - component: {fileID: 292362029}
   - component: {fileID: 292362028}
-  - component: {fileID: 292362026}
   - component: {fileID: 292362031}
   m_Layer: 0
   m_Name: Water
@@ -254,24 +270,6 @@ Transform:
   m_Father: {fileID: 215340015}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &292362026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 292362024}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3212252e796fd38448dc63eac07380fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsHorizontalCalculate: 1
-  _staticTilemap: {fileID: 673184945}
-  _tilemap: {fileID: 292362029}
-  _timer:
-    TimeDelay: 0.02
-    ElapsedTime: 0
 --- !u!483693784 &292362028
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -311,7 +309,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -582,6 +580,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &616795880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 616795881}
+  m_Layer: 0
+  m_Name: MarkContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &616795881
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616795880}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673184942
 GameObject:
@@ -855,7 +883,6 @@ GameObject:
   - component: {fileID: 2087240035}
   - component: {fileID: 2087240039}
   - component: {fileID: 2087240038}
-  - component: {fileID: 2087240037}
   - component: {fileID: 2087240036}
   m_Layer: 0
   m_Name: Lava
@@ -894,24 +921,6 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
---- !u!114 &2087240037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2087240034}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3212252e796fd38448dc63eac07380fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsHorizontalCalculate: 0
-  _staticTilemap: {fileID: 673184945}
-  _tilemap: {fileID: 2087240039}
-  _timer:
-    TimeDelay: 0.02
-    ElapsedTime: 0
 --- !u!483693784 &2087240038
 TilemapRenderer:
   m_ObjectHideFlags: 0

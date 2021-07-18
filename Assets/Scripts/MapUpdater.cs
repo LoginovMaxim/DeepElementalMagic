@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Utils;
-using Random = UnityEngine.Random;
 
 public class MapUpdater : MonoBehaviour
 {
@@ -67,8 +64,6 @@ public class MapUpdater : MonoBehaviour
             });
             
             chunk.SetEnabled(isEnabledChunk);
-            
-            _map.ChunkMarks[chunk].color = chunk.IsEnabled ? Color.green : Color.red;
         }
     }
     
@@ -119,8 +114,6 @@ public class MapUpdater : MonoBehaviour
             });
             
             chunk.SetEnabled(isEnabledChunk);
-            
-            _map.ChunkMarks[chunk].color = chunk.IsEnabled ? Color.green : Color.red;
             
             if (isEnabledChunk)
                 continue;

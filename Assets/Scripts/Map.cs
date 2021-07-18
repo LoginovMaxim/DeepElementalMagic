@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using Settings;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 using Utils;
 
 public class Map : MonoBehaviour
 {
+    public int ChunkSize => _chunkSize;
+    
     public Dictionary<Vector3Int, Chunk> Chunks => _chunks;
     
     public Tilemap Earth => _earth;
@@ -21,13 +23,14 @@ public class Map : MonoBehaviour
     [SerializeField] private MapUpdater _mapUpdater;
     
     [Header("Map Parameters")]
-    [SerializeField] private int ChunkSize;
+    [SerializeField] private int _chunkSize;
     [SerializeField] private int CountWidthChunks;
     [SerializeField] private int CountHeightChunks;
     
     [Header("Cave Parameters")]
     [Range(0, 1)]
     [SerializeField] private float _sizeCavePath;
+    [SerializeField] private float _dampingValue;
     [SerializeField] private float _widthCaveHole;
     [SerializeField] private float _heightCaveHole;
     
@@ -40,6 +43,7 @@ public class Map : MonoBehaviour
     [SerializeField] private int _maxWaterHeight;
     [SerializeField] private Tilemap _water;
     [SerializeField] private WaterTileData _waterTileData;
+    [SerializeField] [Range(0.1f, 1.9f)]private float _waterCoefficient;
     
     [Header("Lava Layer")]
     [SerializeField] private int _minLavaHeight;
@@ -48,9 +52,16 @@ public class Map : MonoBehaviour
 
     private Dictionary<Vector3Int, Chunk> _chunks;
     
+    [Header("Tools")]
     public bool IsDrawChunkBounds;
-    public SpriteRenderer MarkPrefab;
-    public Dictionary<Chunk, SpriteRenderer> ChunkMarks;
+
+    public ChunkMark ChunkMark;
+    public bool IsDrawChunkMarks;
+
+    private void OnValidate()
+    {
+        ChunkMark.SetVisibleMarks(IsDrawChunkMarks);
+    }
 
     private void Start()
     {
@@ -66,7 +77,6 @@ public class Map : MonoBehaviour
     private void CreateChunks()
     {
         _chunks = new Dictionary<Vector3Int, Chunk>();
-        ChunkMarks = new Dictionary<Chunk, SpriteRenderer>();
 
         var currentPosition = new Vector3Int();
         
@@ -78,10 +88,13 @@ public class Map : MonoBehaviour
             {
                 currentPosition.x = x;
                 
-                _chunks.Add(currentPosition, new Chunk(ChunkSize, currentPosition, true));
-                ChunkMarks.Add(_chunks[currentPosition], Instantiate(MarkPrefab, new Vector3(currentPosition.x * ChunkSize + ChunkSize/2, currentPosition.y * ChunkSize + ChunkSize/2, 0) * TileUtils.MapCellSize, Quaternion.identity));
+                _chunks.Add(currentPosition, new Chunk(_chunkSize, currentPosition, true));
+                
+                ChunkMark.CreateMark(_chunks[currentPosition]);
             }
         }
+        
+        ChunkMark.AddedListeners();
     }
 
     private void CreateGround()
@@ -91,7 +104,7 @@ public class Map : MonoBehaviour
             if (chunk.Key.y > _maxEarthHeight)
                 continue;
 
-            var currentSizeCave = _sizeCavePath - chunk.Key.y / 64f;
+            var currentSizeCave = _sizeCavePath - chunk.Key.y / _dampingValue;
             
             chunk.Value.TryProcessChunk(cellPosition =>
             {
@@ -103,7 +116,7 @@ public class Map : MonoBehaviour
                 if (chunk.Key.y >= _maxWaterHeight)
                 {
                     if (Mathf.PerlinNoise(cellPosition.x / _widthCaveHole, cellPosition.y / _heightCaveHole) <
-                        currentSizeCave * (1.66f * currentSizeCave))
+                        currentSizeCave * (_waterCoefficient * currentSizeCave))
                     {
                         _water.SetTile(cellPosition, _waterTileData.BlueWater);
                     }
@@ -122,8 +135,6 @@ public class Map : MonoBehaviour
             });
             
             chunk.Value.SetEnabled(true);
-
-            ChunkMarks[chunk.Value].color = chunk.Value.IsEnabled ? Color.green : Color.red;
         }
     }
 
