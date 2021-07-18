@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Settings;
 using UnityEngine;
@@ -58,8 +57,13 @@ public class Map : MonoBehaviour
     public ChunkMark ChunkMark;
     public bool IsDrawChunkMarks;
 
+    private bool _isValidate;
+
     private void OnValidate()
     {
+        if (!_isValidate)
+            return;
+        
         ChunkMark.SetVisibleMarks(IsDrawChunkMarks);
     }
 
@@ -72,6 +76,8 @@ public class Map : MonoBehaviour
             DrawChunkBounds();
 
         _mapUpdater.enabled = true;
+
+        _isValidate = true;
     }
 
     private void CreateChunks()
@@ -104,7 +110,7 @@ public class Map : MonoBehaviour
             if (chunk.Key.y > _maxEarthHeight)
                 continue;
 
-            var currentSizeCave = _sizeCavePath - chunk.Key.y / _dampingValue;
+            var currentSizeCave = _sizeCavePath + TileUtils.GetNormalizeValue(_chunkSize, chunk.Key.y) * _dampingValue;
             
             chunk.Value.TryProcessChunk(cellPosition =>
             {

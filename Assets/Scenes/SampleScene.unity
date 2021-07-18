@@ -186,25 +186,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapUpdater: {fileID: 215340017}
   _chunkSize: 16
-  CountWidthChunks: 16
-  CountHeightChunks: 12
-  _sizeCavePath: 0.33
-  _dampingValue: -60
-  _widthCaveHole: 20
-  _heightCaveHole: 12
-  _maxEarthHeight: 7
+  CountWidthChunks: 24
+  CountHeightChunks: 16
+  _sizeCavePath: 0.66
+  _dampingValue: -0.45
+  _widthCaveHole: 12
+  _heightCaveHole: 10
+  _maxEarthHeight: 11
   _earth: {fileID: 673184945}
   _earthTileData: {fileID: 11400000, guid: 1a7dff1ffcb4f6c4da467bf193359793, type: 2}
-  _maxWaterHeight: 3
+  _maxWaterHeight: 9
   _water: {fileID: 292362029}
   _waterTileData: {fileID: 11400000, guid: 27f3aa9563f6f564ba75508e0c812742, type: 2}
-  _waterCoefficient: 0.9
+  _waterCoefficient: 1.9
   _minLavaHeight: 2
   _lava: {fileID: 2087240039}
   _lavaTileData: {fileID: 11400000, guid: dbc0fd021f13fa44abbc24564dbfa555, type: 2}
   IsDrawChunkBounds: 1
   ChunkMark: {fileID: 215340018}
-  IsDrawChunkMarks: 0
+  IsDrawChunkMarks: 1
 --- !u!114 &215340017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,7 +552,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 16
+  orthographic size: 20
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -576,7 +576,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20, y: 15, z: -10}
+  m_LocalPosition: {x: 30, y: 20, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

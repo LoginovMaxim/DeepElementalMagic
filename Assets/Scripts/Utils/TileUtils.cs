@@ -157,6 +157,11 @@ namespace Utils
             
             return false;
         }
+
+        public static float GetNormalizeValue(float maxValue, float currentValue)
+        {
+            return currentValue / maxValue;
+        }
         
         /*
         public static void CalculateCave(Tilemap tilemap, Vector3Int position)

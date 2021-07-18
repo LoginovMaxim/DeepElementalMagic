@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Utils;
@@ -11,7 +9,6 @@ public class ChunkMark : MonoBehaviour
     [SerializeField] private Transform _markContainer;
     
     private Dictionary<Chunk, SpriteRenderer> _chunkMarks;
-
     private Map _map;
     
     private void OnEnable()
@@ -20,7 +17,7 @@ public class ChunkMark : MonoBehaviour
             _map = GetComponent<Map>();
     }
 
-    private void Start()
+    private void Awake()
     {
         _chunkMarks = new Dictionary<Chunk, SpriteRenderer>();
     }
@@ -44,9 +41,6 @@ public class ChunkMark : MonoBehaviour
 
     public void SetVisibleMarks(bool isShowMarks)
     {
-        if (_chunkMarks == null)
-            return;
-        
         foreach (var chunkMark in _chunkMarks.Values)
         {
             chunkMark.enabled = isShowMarks;
