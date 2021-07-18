@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
-public struct Chunk
+public class Chunk
 {
     public int Size;
     public Vector3Int AnchorPosition;
@@ -38,6 +39,44 @@ public struct Chunk
         return true;
     }
 
+    public void SetEnabled(bool isEnabled)
+    {
+        IsEnabled = isEnabled;
+    }
+
+    public bool CheckNeighborChunkForEnabled(Vector3Int cellPosition, out Vector3Int liquidDirection)
+    {
+        liquidDirection = Vector3Int.zero;
+        
+        if (cellPosition.y == AnchorPosition.y * Size)
+        {
+            liquidDirection = Vector3Int.down;
+            return true;
+        }
+        
+        if (cellPosition.x == AnchorPosition.x * Size)
+        {
+            liquidDirection = Vector3Int.left;
+            return true;
+        }
+        
+        if (cellPosition.x == AnchorPosition.x * Size + Size - 1)
+        {
+            liquidDirection = Vector3Int.right;
+            return true;
+        }
+
+        return false;
+    }
+
+    public Vector3Int GetRandomCellPosition()
+    {
+        return new Vector3Int(
+            AnchorPosition.x * Size + Random.Range(0, Size),
+            AnchorPosition.y * Size + Random.Range(0, Size), 
+            0);
+    }
+
     public Vector3 GetVertexPosition(int index)
     {
         var vertexPosition = (Vector3) AnchorPosition * Size;
@@ -66,6 +105,6 @@ public struct Chunk
             }
         }
 
-        return vertexPosition * Utils.Utils.MapCellSize;
+        return vertexPosition * Utils.TileUtils.MapCellSize;
     }
 }

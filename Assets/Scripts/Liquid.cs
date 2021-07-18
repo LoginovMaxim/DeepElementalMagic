@@ -1,16 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using Random = UnityEngine.Random;
+using Utils;
 
-public class Water : MonoBehaviour
+public class Liquid : MonoBehaviour
 {
     public bool IsHorizontalCalculate;
+    
     [SerializeField] private Tilemap _staticTilemap;
     [SerializeField] private Tilemap _tilemap;
-    [SerializeField] private Utils.Utils.Timer _timer;
+    [SerializeField] private TileUtils.Timer _timer;
 
     private void Update()
     {
@@ -27,7 +25,7 @@ public class Water : MonoBehaviour
     {
         if (IsHorizontalCalculate)
         {
-            Utils.Utils.HorizontalCalculateAllTilemapUp(_tilemap, currentTilePosition =>
+            TileUtils.HorizontalCalculateAllTilemapUp(_tilemap, currentTilePosition =>
             {
                 if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
                     return;
@@ -35,16 +33,16 @@ public class Water : MonoBehaviour
                 if (CheckTile(currentTilePosition, Vector3Int.down))
                     return;
 
-                Utils.Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+                TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
                 CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
 
-                Utils.Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
+                TileUtils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
             });
         }
         else
         {
-            Utils.Utils.CalculateAllTilemapUp(_tilemap, currentTilePosition =>
+            TileUtils.CalculateAllTilemapUp(_tilemap, currentTilePosition =>
             {
                 if (_staticTilemap.HasTile(currentTilePosition + Vector3Int.down))
                     return;
@@ -52,11 +50,11 @@ public class Water : MonoBehaviour
                 if (CheckTile(currentTilePosition, Vector3Int.down))
                     return;
 
-                Utils.Utils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+                TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
                 CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
 
-                Utils.Utils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
+                TileUtils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
             });
         }
     }

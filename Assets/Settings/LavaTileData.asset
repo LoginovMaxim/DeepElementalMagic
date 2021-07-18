@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06efb876c7c04ec483e80ac085ac83fd, type: 3}
-  m_Name: WaterTileData
+  m_Script: {fileID: 11500000, guid: ca2d201ccab94cbea2585a78665fe699, type: 3}
+  m_Name: LavaTileData
   m_EditorClassIdentifier: 
-  BlueWater: {fileID: 11400000, guid: af5d685301185264c97a5ecb7f734c7a, type: 2}
+  RedLava: {fileID: 11400000, guid: 5c21fe506c544024abacd20c12651312, type: 2}

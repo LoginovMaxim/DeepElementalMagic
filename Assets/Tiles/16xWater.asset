@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d1514134bc4fbd41bb739b1b9a49231, type: 3}
   m_Name: 16xWater
   m_EditorClassIdentifier: 
-  m_DefaultSprite: {fileID: -1087742123151294524, guid: f3132c8691e74e5409138c586cc920f3, type: 3}
+  m_DefaultSprite: {fileID: 21300000, guid: caeeac66dcd160e48b0170611ed1e364, type: 3}
   m_DefaultGameObject: {fileID: 0}
   m_DefaultColliderType: 1
   m_TilingRules: []
