@@ -23,6 +23,7 @@ public class Liquid : MonoBehaviour
 
     private void DoSimulate()
     {
+        /*
         if (IsHorizontalCalculate)
         {
             TileUtils.HorizontalCalculateAllTilemapUp(_tilemap, currentTilePosition =>
@@ -33,9 +34,9 @@ public class Liquid : MonoBehaviour
                 if (CheckTile(currentTilePosition, Vector3Int.down))
                     return;
 
-                TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+                //TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
-                CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
+                //CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
 
                 TileUtils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
             });
@@ -50,13 +51,14 @@ public class Liquid : MonoBehaviour
                 if (CheckTile(currentTilePosition, Vector3Int.down))
                     return;
 
-                TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
+                //TileUtils.CalculateCountNearLateralVoid(_tilemap, _staticTilemap, currentTilePosition, out var isRight);
 
-                CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
+                //CheckTile(currentTilePosition, isRight ? Vector3Int.right : Vector3Int.left);
 
                 TileUtils.CalculateWaterPressure(_tilemap, currentTilePosition, Vector3Int.up);
             });
         }
+        */
     }
 
     private bool CheckTile(Vector3Int currentPosition, Vector3Int direction)

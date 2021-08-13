@@ -6,5 +6,7 @@ namespace Settings
     public class EarthTileData : ScriptableObject
     {
         public RuleTile GreenGrass;
+        public RuleTile Rock;
+        public RuleTile Absidian;
     }
 }

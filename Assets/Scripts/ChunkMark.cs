@@ -57,7 +57,7 @@ public class ChunkMark : MonoBehaviour
     
     private void OnChangeChunkEnabled(Chunk chunk)
     {
-        _chunkMarks[chunk].color = chunk.IsEnabled ? Color.green : Color.red;
+        _chunkMarks[chunk].color = chunk.IsEnabled && !chunk.IsFrozen ? Color.green : Color.red;
     }
 
     private void OnDisable()

@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: EarthTileData
   m_EditorClassIdentifier: 
   GreenGrass: {fileID: 11400000, guid: d78b18c4f7c0fd14e9c52236304f8cdb, type: 2}
+  Rock: {fileID: -1719316140085334216, guid: 230c855dc9cdfcb47a24de4955c4baac, type: 2}
+  Absidian: {fileID: -900799280161740094, guid: 5411b48bc13695442bd0291b54133ca8, type: 2}

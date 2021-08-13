@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Settings;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class Map : MonoBehaviour
     
     [Header("Map Parameters")]
     [SerializeField] private int _chunkSize;
+    [SerializeField] private int _chunkFrozenSteps;
     [SerializeField] private int CountWidthChunks;
     [SerializeField] private int CountHeightChunks;
     
@@ -50,8 +52,9 @@ public class Map : MonoBehaviour
     [SerializeField] private LavaTileData _lavaTileData;
 
     private Dictionary<Vector3Int, Chunk> _chunks;
-    
-    [Header("Tools")]
+
+    [Header("Tools")] 
+    public bool IsCreateMode;
     public bool IsDrawChunkBounds;
 
     public ChunkMark ChunkMark;
@@ -69,15 +72,28 @@ public class Map : MonoBehaviour
 
     private void Start()
     {
+        if (!IsCreateMode)
+        {
+            CreateChunks();
+            EnableAdjustFunctions();
+            return;
+        }
+        
         CreateChunks();
         CreateGround();
-        
+
+        EnableAdjustFunctions();
+    }
+
+    private void EnableAdjustFunctions()
+    {
         if (IsDrawChunkBounds)
             DrawChunkBounds();
 
         _mapUpdater.enabled = true;
 
         _isValidate = true;
+        ChunkMark.SetVisibleMarks(IsDrawChunkMarks);
     }
 
     private void CreateChunks()
@@ -94,7 +110,7 @@ public class Map : MonoBehaviour
             {
                 currentPosition.x = x;
                 
-                _chunks.Add(currentPosition, new Chunk(_chunkSize, currentPosition, true));
+                _chunks.Add(currentPosition, new Chunk(_chunkSize, currentPosition, true, _chunkFrozenSteps));
                 
                 ChunkMark.CreateMark(_chunks[currentPosition]);
             }
@@ -114,9 +130,20 @@ public class Map : MonoBehaviour
             
             chunk.Value.TryProcessChunk(cellPosition =>
             {
+                if (chunk.Key.y == 0)
+                {
+                    _lava.SetTile(cellPosition, _lavaTileData.RedLava);
+                    return;
+                }
+                
                 if (Mathf.PerlinNoise(cellPosition.x / _widthCaveHole, cellPosition.y / _heightCaveHole) > currentSizeCave)
                 {
                     _earth.SetTile(cellPosition, _earthTileData.GreenGrass);
+                }
+                
+                if (Mathf.PerlinNoise(cellPosition.x / _widthCaveHole, cellPosition.y / _heightCaveHole) - currentSizeCave > 0.3f)
+                {
+                    _earth.SetTile(cellPosition, _earthTileData.Rock);
                 }
                 
                 if (chunk.Key.y >= _maxWaterHeight)
@@ -141,6 +168,14 @@ public class Map : MonoBehaviour
             });
             
             chunk.Value.SetEnabled(true);
+        }
+    }
+
+    public void DoActionChunk(Action<Chunk> actionChunk)
+    {
+        foreach (var chunk in _chunks.Values)
+        {
+            actionChunk?.Invoke(chunk);
         }
     }
 

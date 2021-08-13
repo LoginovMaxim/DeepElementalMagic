@@ -68,35 +68,38 @@ namespace Utils
             }
         }
 
-        public static void CalculateCountNearLateralVoid(Tilemap tilemap, Tilemap staticTilemap, Vector3Int position, out bool isRight)
+        public static void CalculateCountNearLateralVoid(Tilemap liquidTilemap, Tilemap staticTilemap, Vector3Int position, out int directionSign)
         {
-            var rightOffset = position + Vector3Int.right + Vector3Int.down;
-            var leftOffset = position + Vector3Int.left + Vector3Int.down;
-            
-            for (var x = 0; x < 100; x++)
+            var rightOffset = position + Vector3Int.right;
+            var leftOffset = position + Vector3Int.left;
+
+            for (var x = 0; x < MapCellSize * 100; x++)
             {
-                if (!tilemap.HasTile(leftOffset) && !staticTilemap.HasTile(leftOffset))
+                if (!liquidTilemap.HasTile(rightOffset) && !staticTilemap.HasTile(rightOffset))
                 {
-                    isRight = false;
+                    directionSign = 1;
                     return;
                 }
-                
-                if (!tilemap.HasTile(rightOffset) && !staticTilemap.HasTile(rightOffset))
+        
+                if (!liquidTilemap.HasTile(leftOffset) && !staticTilemap.HasTile(leftOffset))
                 {
-                    isRight = true;
+                    directionSign = -1;
                     return;
                 }
-                
+        
                 rightOffset += Vector3Int.right;
                 leftOffset += Vector3Int.left;
             }
 
-            isRight = true;
+            directionSign = 0;
         }
 
-        public static void CalculateWaterPressure(Tilemap tilemap, Vector3Int position, Vector3Int flowDirection)
+        public static void CalculateWaterPressure(Tilemap liquidTilemap, Tilemap staticTilemap, Vector3Int position, Vector3Int flowDirection)
         {
-            if (tilemap.HasTile(position + flowDirection))
+            if (staticTilemap.HasTile(position + flowDirection))
+                return;
+            
+            if (liquidTilemap.HasTile(position + flowDirection))
                 return;
             
             var logicPositions = new Dictionary<Vector3Int, bool>();
@@ -107,7 +110,7 @@ namespace Utils
             
             while (true)
             {
-                if (!PathFindingAboveWaterTile(minYPosition, tilemap, checkPosition, out var abovePosition,
+                if (!PathFindingAboveWaterTile(minYPosition, liquidTilemap, checkPosition, out var abovePosition,
                     ref logicPositions))
                 {
                     checkPosition = logicPositions.FirstOrDefault(l => l.Value == false).Key;
@@ -118,8 +121,8 @@ namespace Utils
                     continue;
                 }
                 
-                tilemap.SetTile(position + flowDirection, tilemap.GetTile(abovePosition));
-                tilemap.SetTile(abovePosition, null);
+                liquidTilemap.SetTile(position + flowDirection, liquidTilemap.GetTile(abovePosition));
+                liquidTilemap.SetTile(abovePosition, null);
                 return;
             }
         }
@@ -156,6 +159,31 @@ namespace Utils
             }
             
             return false;
+        }
+
+        public static Vector3Int GetFlowDirectionByMagneticPosition(Vector3Int magneticPosition, Vector3Int currentPosition)
+        {
+            var direction = Vector3Int.zero;
+
+            if (magneticPosition.y > currentPosition.y)
+            {
+                direction += Vector3Int.up;
+            }
+            else if (magneticPosition.y < currentPosition.y)
+            {
+                direction += Vector3Int.down;
+            }
+            
+            if (magneticPosition.x > currentPosition.x)
+            {
+                direction += Vector3Int.right;
+            }
+            else if (magneticPosition.x < currentPosition.x)
+            {
+                direction += Vector3Int.left;
+            }
+
+            return direction;
         }
 
         public static float GetNormalizeValue(float maxValue, float currentValue)
