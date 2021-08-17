@@ -220,24 +220,24 @@ MonoBehaviour:
   _chunkSize: 16
   _chunkFrozenSteps: 360
   _countWidthChunks: 36
-  _countHeightChunks: 12
-  _sizeCavePath: 0.4
-  _dampingValue: 0.2
-  _widthCaveHole: 18
-  _heightCaveHole: 12
-  _maxEarthHeight: 8
+  _countHeightChunks: 24
+  _sizeCavePath: 0.46
+  _dampingValue: 0.02
+  _widthCaveHole: 12
+  _heightCaveHole: 9
+  _maxEarthHeight: 19
   _earth: {fileID: 673184945}
   _earthTileData: {fileID: 11400000, guid: 1a7dff1ffcb4f6c4da467bf193359793, type: 2}
-  _maxRockHeight: 7
+  _maxRockHeight: 15
   _rock: {fileID: 1682763943}
   _rockTileData: {fileID: 11400000, guid: 59d67ec44b0cfbd488801ea9a085fb08, type: 2}
-  _maxAbsidianHeight: 5
+  _maxAbsidianHeight: 2
   _absidian: {fileID: 593449789}
   _absidianTileData: {fileID: 11400000, guid: 777034443dd103049b28911a12f24c9a, type: 2}
-  _maxWaterHeight: 6
+  _maxWaterHeight: 18
   _water: {fileID: 292362029}
   _waterTileData: {fileID: 11400000, guid: 27f3aa9563f6f564ba75508e0c812742, type: 2}
-  _waterCoefficient: 0.66
+  _waterCoefficient: 1.58
   _minLavaHeight: 0
   _lava: {fileID: 2087240039}
   _lavaTileData: {fileID: 11400000, guid: dbc0fd021f13fa44abbc24564dbfa555, type: 2}
@@ -1395,7 +1395,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 922167134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 28.48, y: 20, z: 0}
+  m_LocalPosition: {x: 28.48, y: 40, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 902499316}

@@ -55,11 +55,33 @@ public class Chunk
         SetEnabled(false);
         return true;
     }
+    
+    public bool TryProcessChunkForceEnable(Action<Vector3Int> actionByPosition)
+    {
+        if (_isFrozen)
+            return false;
+        
+        var currentPosition = new Vector3Int();
+
+        for (var y = 0; y < _size; y++)
+        {
+            currentPosition.y = y + _anchorPosition.y * _size;
+
+            for (var x = 0; x < _size; x++)
+            {
+                currentPosition.x = x + _anchorPosition.x * _size;
+
+                actionByPosition?.Invoke(currentPosition);
+            }
+        }
+        
+        return true;
+    }
 
     public void SetEnabled(bool isEnabled)
     {
         _isEnabled = isEnabled;
-        ChangeEnabled?.Invoke(this);
+        //ChangeEnabled?.Invoke(this);
     }
 
     public void ResetFrozen()

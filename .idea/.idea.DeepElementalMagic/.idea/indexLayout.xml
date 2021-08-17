@@ -4,6 +4,7 @@
     <attachedFolders />
     <explicitIncludes>
       <Path>2d-extras-2020.3/2d-extras-2020.3</Path>
+      <Path>Assets</Path>
       <Path>Library/PackageCache/com.unity.2d.animation@5.0.5</Path>
       <Path>Library/PackageCache/com.unity.2d.common@4.0.3</Path>
       <Path>Library/PackageCache/com.unity.2d.path@4.0.1</Path>
@@ -62,6 +63,7 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
+      <Path>2d-extras-2020.3</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>UserSettings</Path>

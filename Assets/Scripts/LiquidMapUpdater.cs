@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 using Utils;
 
 namespace DefaultNamespace
 {
-    public class CommonMapUpdater : MonoBehaviour, IMapUpdater
+    public abstract class LiquidMapUpdater : MonoBehaviour, IMapUpdater
     {
+        public Queue<TileCode> LiquidTiles { get; set; }
+        
         protected Map Map;
         
         [SerializeField] private TileUtils.Timer _simulateTimer;
         [SerializeField] private TileUtils.Timer _refreshTimer;
-
+        
         private void Start()
         {
             Map = FindObjectOfType<Map>();
+            LiquidTiles = new Queue<TileCode>();
         }
 
         public void DoUpdate()
@@ -30,7 +35,10 @@ namespace DefaultNamespace
             if (!(_simulateTimer.ElapsedTime < 0)) 
                 return;
         
-            UpdateWaterChunks();
+            var thread = new Thread(UpdateLiquidChunks);
+            thread.Start();
+            
+            //UpdateLiquidChunks();
             _simulateTimer.ElapsedTime = _simulateTimer.TimeDelay;
         }
 
@@ -45,8 +53,8 @@ namespace DefaultNamespace
             _refreshTimer.ElapsedTime = _refreshTimer.TimeDelay;
         }
 
-        protected virtual void RegistryAllLiquidChunks() { }
+        protected abstract void RegistryAllLiquidChunks();
 
-        protected virtual void UpdateWaterChunks() { }
+        protected abstract void UpdateLiquidChunks();
     }
 }

@@ -68,23 +68,33 @@ namespace Utils
             }
         }
 
-        public static void CalculateCountNearLateralVoid(Tilemap liquidTilemap, Tilemap staticTilemap, Vector3Int position, out int directionSign)
+        public static void CalculateCountNearLateralVoid(
+            MatrixTilemap matrixTilemap, 
+            byte selfCode,
+            Vector3Int position, 
+            out int directionSign)
         {
             var rightOffset = position + Vector3Int.right;
             var leftOffset = position + Vector3Int.left;
 
             for (var x = 0; x < MapCellSize * 100; x++)
             {
-                if (!liquidTilemap.HasTile(rightOffset) && !staticTilemap.HasTile(rightOffset))
+                if (matrixTilemap.TryGetCode(rightOffset, out var codeRight))
                 {
-                    directionSign = 1;
-                    return;
+                    if (codeRight == 0)
+                    {
+                        directionSign = 1;
+                        return;
+                    }
                 }
-        
-                if (!liquidTilemap.HasTile(leftOffset) && !staticTilemap.HasTile(leftOffset))
+                
+                if (matrixTilemap.TryGetCode(leftOffset, out var codeLeft))
                 {
-                    directionSign = -1;
-                    return;
+                    if (codeLeft == 0)
+                    {
+                        directionSign = -1;
+                        return;
+                    }
                 }
         
                 rightOffset += Vector3Int.right;
@@ -94,12 +104,14 @@ namespace Utils
             directionSign = 0;
         }
 
-        public static void CalculateWaterPressure(Tilemap liquidTilemap, Tilemap staticTilemap, Vector3Int position, Vector3Int flowDirection)
+        public static void CalculateWaterPressure(MatrixTilemap matrixTilemap, byte codeTile, Vector3Int position, Vector3Int direction)
         {
-            if (staticTilemap.HasTile(position + flowDirection))
+            var flowDirection = position + direction;
+            
+            if (matrixTilemap.Codes[flowDirection.x, flowDirection.y] % 2 != 0)
                 return;
             
-            if (liquidTilemap.HasTile(position + flowDirection))
+            if (matrixTilemap.Codes[flowDirection.x, flowDirection.y] == codeTile)
                 return;
             
             var logicPositions = new Dictionary<Vector3Int, bool>();
@@ -110,7 +122,7 @@ namespace Utils
             
             while (true)
             {
-                if (!PathFindingAboveWaterTile(minYPosition, liquidTilemap, checkPosition, out var abovePosition,
+                if (!PathFindingAboveWaterTile(matrixTilemap, minYPosition, codeTile, checkPosition, out var abovePosition,
                     ref logicPositions))
                 {
                     checkPosition = logicPositions.FirstOrDefault(l => l.Value == false).Key;
@@ -121,13 +133,19 @@ namespace Utils
                     continue;
                 }
                 
-                liquidTilemap.SetTile(position + flowDirection, liquidTilemap.GetTile(abovePosition));
-                liquidTilemap.SetTile(abovePosition, null);
+                matrixTilemap.Codes[flowDirection.x, flowDirection.y] = codeTile;
+                matrixTilemap.Codes[abovePosition.x, abovePosition.y] = 0;
                 return;
             }
         }
 
-        public static bool PathFindingAboveWaterTile(float minYPosition, Tilemap tilemap, Vector3Int checkPosition, out Vector3Int abovePosition, ref Dictionary<Vector3Int, bool> logicPositions)
+        private static bool PathFindingAboveWaterTile(
+            MatrixTilemap matrixTilemap, 
+            float minYPosition, 
+            byte codeTile, 
+            Vector3Int checkPosition, 
+            out Vector3Int abovePosition, 
+            ref Dictionary<Vector3Int, bool> logicPositions)
         {
             abovePosition = checkPosition;
             logicPositions[checkPosition] = true;
@@ -136,7 +154,7 @@ namespace Utils
             {
                 var position = checkPosition + DirectionUtils.FourDirections[i];
                 
-                if (!tilemap.HasTile(position))
+                if (matrixTilemap.Codes[position.x, position.y] != codeTile)
                     continue;
 
                 if (logicPositions.ContainsKey(position) && logicPositions[position])
